@@ -1,0 +1,876 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/areebaarshadqureshi/Python-For-Data-Science/blob/main/02-Operators-IfElse-Loops/Lecture_02\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Operators** are special symbols or keywords used to perform operations on variables and values (e.g., +, -, *, /).\n",
+        "They are used in expressions to manipulate data and include types like arithmetic, relational, logical, assignment, and bitwise operators.\n"
+      ],
+      "metadata": {
+        "id": "VRzM5l4pWi01"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4eaxKywYh7Bo",
+        "outputId": "b41d4c99-11fd-4b22-ad3d-50d4493623d7"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "16\n",
+            "-4\n",
+            "60\n",
+            "0.6\n",
+            "6\n",
+            "0\n",
+            "60466176\n"
+          ]
+        }
+      ],
+      "source": [
+        "#Airthematic operators\n",
+        "a=6\n",
+        "b=10\n",
+        "print(a+b)\n",
+        "print(a-b)\n",
+        "print(a*b)\n",
+        "print(a/b)\n",
+        "print(a%b)\n",
+        "print(a//b) #integer division\n",
+        "print(a**b)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Relaional operators are used to compare two values\n",
+        "a=6\n",
+        "b=10\n",
+        "print(a==b)\n",
+        "print(a!=b)\n",
+        "print(a>b)\n",
+        "print(a<b)\n",
+        "print(a>=b)\n",
+        "print(a<=b)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "GoUtjM6fX-Jd",
+        "outputId": "7ce8498f-8ecc-4af1-abf9-fb50284e14cf"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "False\n",
+            "True\n",
+            "False\n",
+            "True\n",
+            "False\n",
+            "True\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Logical operators are used to combine conditional statements.\n",
+        "a=6\n",
+        "b=10\n",
+        "print(a==b and a!=b)\n",
+        "print(a==b or a!=b)\n",
+        "print(not a==b)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "45_mvWMKYQCi",
+        "outputId": "89a7ada4-909c-403f-fb68-7166772f223a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "False\n",
+            "True\n",
+            "True\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Bitwise operators perform operations on the binary representations of integers.\n",
+        "a=6 #--------0110\n",
+        "b=10 #--------1010\n",
+        "print(a&b) #bitwise and\n",
+        "print(a|b) #bitwise or\n",
+        "print(a^b) #bitwise Xor\n",
+        "print(~a)  #bitwise not convert 0 into 1 and viseversa\n",
+        "print(a<<b) #bitwise right shift\n",
+        "print(a>>b) #bitwise left shift"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Kx7_pthPYxf0",
+        "outputId": "bfe627ce-8345-4498-9890-c08f0a0c82c6"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "2\n",
+            "14\n",
+            "12\n",
+            "-7\n",
+            "6144\n",
+            "0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Assignment operators are used to assign values to variables.\n",
+        "a=6\n",
+        "a=a+10\n",
+        "print(a)\n",
+        "\n",
+        "a*=10\n",
+        "print(a)\n",
+        "a/=10\n",
+        "print(a)\n",
+        "a-=10\n",
+        "print(a)\n",
+        "a%=10\n",
+        "print(a)\n",
+        "a//=10\n",
+        "print(a)\n",
+        "a**=10\n",
+        "print(a)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "M9pARy07ZLWm",
+        "outputId": "5d9a912b-d206-4486-ebae-d2e652be197c"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "16\n",
+            "160\n",
+            "16.0\n",
+            "6.0\n",
+            "6.0\n",
+            "0.0\n",
+            "0.0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Membership operators are used to test whether a value is present in a sequence (like list, string, tuple).\n",
+        "print('I' in \"I am learning python\")\n",
+        "print('I' not in \"I am learning python\")\n",
+        "print(1 in [1,2,3,4,5] )\n",
+        "print(1 not in [1,2,3,4,5] )"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mdJ9NJjCdcWd",
+        "outputId": "77d1687e-0b44-4b23-eb0a-de4e6c00cffc"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "True\n",
+            "False\n",
+            "True\n",
+            "False\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Identity Operators # Identity operators are used to compare the memory locations of two objects.\n",
+        "a = [1, 2]\n",
+        "b = a\n",
+        "c = [1, 2]\n",
+        "\n",
+        "print(a is b)      # True — both refer to the same object\n",
+        "print(a is c)      # False — different objects with same content\n",
+        "print(a is not c)  # True"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jAKI_sR0d4Hr",
+        "outputId": "dcd86388-0648-44da-d4cf-465389fc8d30"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "True\n",
+            "False\n",
+            "True\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#program-Find the sum of a 3 digit number entered by the user\n",
+        "\n",
+        "n=int(input(\"Enter a 3 digit number: \"))\n",
+        "n1=n%10\n",
+        "n2=(n//10)%10\n",
+        "n3=(n//100)%10\n",
+        "print(n1+n2+n3)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "7-XdmZWde_7p",
+        "outputId": "77db27f3-b3d4-46b4-af83-c1b06e304b09"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter a 3 digit number: 315\n",
+            "9\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**IF ELSE** # if...else is used to execute code conditionally based on whether a condition is True or False."
+      ],
+      "metadata": {
+        "id": "wku-UP6LlXfQ"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Login program and indentation\n",
+        "email=input(\"Enter email: \")\n",
+        "password=input(\"Enter password: \")\n",
+        "\n",
+        "if(email==\"areeba@gmail.com\" and password==\"12345\"):\n",
+        "  print(\"Welcome\")\n",
+        "elif(email==\"areeba@gmail.com\" and password!=\"12345\"):\n",
+        "  print(\"Incorrect password\")\n",
+        "  password=input(\"Enter password Again: \")\n",
+        "  if(password==\"12345\"):\n",
+        "    print(\"Finally correct\")\n",
+        "    print(\"Welcome\")\n",
+        "  else:\n",
+        "    print(\"Still incorrect\")\n",
+        "else:\n",
+        "  print(\"Not correct\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3fK7NnyAfyzU",
+        "outputId": "5c24fb4a-4b55-4ab2-915c-d57b8f841611"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter email: areeba@gmail.com\n",
+            "Enter password: 1234\n",
+            "Incorrect password\n",
+            "Enter password Again: 1234\n",
+            "Still incorrect\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#1.Find the minimum of three numbers\n",
+        "\n",
+        "a,b,c=map(int,input(\"Enter three numbers: \").split(\",\"))\n",
+        "\n",
+        "if(a<b and a<c):\n",
+        "  print(f\"{a} is minimum number\")\n",
+        "\n",
+        "elif(b<a and b<c):\n",
+        "  print(f\"{b} is minimum number\")\n",
+        "else:\n",
+        "  print(f\"{c} is minimum number\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mhY9kjLdlzIl",
+        "outputId": "3208a89d-534e-4082-e9e3-b6e4ccdc1f31"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter three numbers: 6,7,2\n",
+            "2 is minimum number\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#menu driven Claculator\n",
+        "\n",
+        "a,b=map(int,input(\"Enter three numbers: \").split(\",\"))\n",
+        "\n",
+        "choice=int(input(\n",
+        "\"\"\"Cisco Calculator\n",
+        "Choose any option\n",
+        "Press 1 For addition\n",
+        "Press 2 For subtraction\n",
+        "Press 3 For multiplication\n",
+        "Press 4 For division\n",
+        "\"Enter your choice: \"\"\"))\n",
+        "\n",
+        "if(choice==1):\n",
+        "  print(f\"{a}+{b}={a+b}\")\n",
+        "elif(choice==2):\n",
+        "  print(f\"{a}-{b}={a-b}\")\n",
+        "elif(choice==3):\n",
+        "  print(f\"{a}*{b}={a*b}\")\n",
+        "elif(choice==4):\n",
+        "  print(f\"{a}/{b}={a/b :.2f}\")\n",
+        "else:\n",
+        "  print(\"Invalid Choice\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "VcfV3vn9oJ2J",
+        "outputId": "971e4198-cad4-4a28-df82-4a366daed050"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter three numbers: 2,3\n",
+            "Cisco Calculator\n",
+            "Choose any option\n",
+            "Press 1 For addition\n",
+            "Press 2 For subtraction\n",
+            "Press 3 For multiplication\n",
+            "Press 4 For division\n",
+            "\"Enter your choice: 4\n",
+            "2/3=0.67\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Modules** # Modules in Python are files containing Python code (functions, variables, classes) that can be imported and reused.\n"
+      ],
+      "metadata": {
+        "id": "EvyqFRVypRgy"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#math----for mathematical software\n",
+        "import math as m\n",
+        "print(m.pi)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "SCU1aGBDraKC",
+        "outputId": "449a2c79-9ba1-439d-a8bc-f43bd4b890e9"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "3.141592653589793\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#keywords\n",
+        "import keyword as k\n",
+        "print(k.kwlist)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "kGY6K0MzrywH",
+        "outputId": "c545dd8f-26ba-4110-89d8-497db02a421a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#random\n",
+        "\n",
+        "import random as r\n",
+        "print(r.randint(1,100))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "sK43YA0MsSpO",
+        "outputId": "a87c7206-d2c4-4adb-db13-c07851d97cd9"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "21\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#DateTIme\n",
+        "\n",
+        "import datetime as dt\n",
+        "print(dt.datetime.now())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "nGUJfhNqsZ7z",
+        "outputId": "933f36cd-2746-4501-fc44-5281fd5e099a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "2025-06-17 16:21:51.274030\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#To find out all modules in python\n",
+        "!pip install black\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "sncijtrDsmmX",
+        "outputId": "d163b385-cd54-4449-f4f0-430496b4d237"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: black in /usr/local/lib/python3.11/dist-packages (25.1.0)\n",
+            "Requirement already satisfied: click>=8.0.0 in /usr/local/lib/python3.11/dist-packages (from black) (8.2.1)\n",
+            "Requirement already satisfied: mypy-extensions>=0.4.3 in /usr/local/lib/python3.11/dist-packages (from black) (1.1.0)\n",
+            "Requirement already satisfied: packaging>=22.0 in /usr/local/lib/python3.11/dist-packages (from black) (24.2)\n",
+            "Requirement already satisfied: pathspec>=0.9.0 in /usr/local/lib/python3.11/dist-packages (from black) (0.12.1)\n",
+            "Requirement already satisfied: platformdirs>=2 in /usr/local/lib/python3.11/dist-packages (from black) (4.3.8)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**LOOPS** # Loops in Python are used to repeat a block of code multiple times.\n",
+        "Imagine Apple has a list of new iPhones — all displayed in the same card design on their website:\n",
+        "📱 iPhone 13, 📱 iPhone 14, 📱 iPhone 15\n",
+        "\n",
+        "Instead of writing HTML/CSS for each phone manually, they use a loop in Python (or backend language like Django, Flask, etc.) to repeat the design for each phone\n"
+      ],
+      "metadata": {
+        "id": "ZKpKEJVVtxqV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#While loop\n",
+        "#print table\n",
+        "\n",
+        "n=int(input(\"Enter a number: \"))\n",
+        "i=1\n",
+        "while i<11:\n",
+        "  print(f\"{n} * {i} = {n*i}\")\n",
+        "  i=i+1\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "P1yRKenMs2AJ",
+        "outputId": "e121ff38-914f-4744-a0f7-a66127a3915e"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter a number: 15\n",
+            "15 * 1 = 15\n",
+            "15 * 2 = 30\n",
+            "15 * 3 = 45\n",
+            "15 * 4 = 60\n",
+            "15 * 5 = 75\n",
+            "15 * 6 = 90\n",
+            "15 * 7 = 105\n",
+            "15 * 8 = 120\n",
+            "15 * 9 = 135\n",
+            "15 * 10 = 150\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Sum of all digits of a given number\n",
+        "\n",
+        "n=input(\"Enter any number:\")\n",
+        "size=len(n)\n",
+        "\n",
+        "i=0\n",
+        "count=0\n",
+        "while i<size:\n",
+        "  count=count+int(n[i])\n",
+        "  i=i+1\n",
+        "else:\n",
+        " print(f\"Sum of {n} is:{count}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mWMCVGL2tomc",
+        "outputId": "7820a269-fc79-43c4-8fcc-a6aa5ca77f12"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter any number:1234\n",
+            "Sum of 1234 is:10\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Accepting a numbers form user till a==0 and then find avg\n",
+        "count=0\n",
+        "sum=0\n",
+        "a=1\n",
+        "while a==1:\n",
+        "  n=int(input(\"Enter any number:\"))\n",
+        "  sum+=n\n",
+        "  count+=1\n",
+        "  a=int(input(\"\"\"Press 1 -------To add number\\nPress 0--------To exit\\n\"\"\"))\n",
+        "  if(a==0):\n",
+        "    avg=sum/count\n",
+        "    print(f\"Average is:{avg}\")\n",
+        "    break\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9JnUXzoyjjSR",
+        "outputId": "667fbd4e-c779-45f4-caf6-6c59e0a75bcf"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter any number:3\n",
+            "Press 1 -------To add number\n",
+            "Press 0--------To exit\n",
+            "1\n",
+            "Enter any number:27\n",
+            "Press 1 -------To add number\n",
+            "Press 0--------To exit\n",
+            "1\n",
+            "Enter any number:3\n",
+            "Press 1 -------To add number\n",
+            "Press 0--------To exit\n",
+            "0\n",
+            "Average is:11.0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import random\n",
+        "\n",
+        "Guess = random.randint(1, 100)\n",
+        "Attempts = 3\n",
+        "\n",
+        "while Attempts > 0:\n",
+        "    n = int(input(\"Enter a number: \"))\n",
+        "\n",
+        "    if n == Guess:\n",
+        "        print(\"🎉 Congratulations! You won the game.\")\n",
+        "        break\n",
+        "    elif n < Guess:\n",
+        "        print(f\"\\u274C Too low! Try a higher number.\")\n",
+        "    else:\n",
+        "        print(f\"\\u274C Too high! Try a lower number.\")\n",
+        "\n",
+        "    Attempts -= 1\n",
+        "    print(f\"👉 You have {Attempts} attempts left.\\n\")\n",
+        "\n",
+        "else:\n",
+        "    print(f\"\\U0001F622 You lost the game.\")\n",
+        "    print(f\"The correct number was: {Guess}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ut2AbXt2m3lb",
+        "outputId": "1ec5c55d-d621-4709-a6d4-4d2cf07985ac"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter a number: 23\n",
+            "❌ Too low! Try a higher number.\n",
+            "👉 You have 2 attempts left.\n",
+            "\n",
+            "Enter a number: 16\n",
+            "❌ Too low! Try a higher number.\n",
+            "👉 You have 1 attempts left.\n",
+            "\n",
+            "Enter a number: 20\n",
+            "❌ Too low! Try a higher number.\n",
+            "👉 You have 0 attempts left.\n",
+            "\n",
+            "😢 You lost the game.\n",
+            "The correct number was: 50\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#For Loop\n",
+        "\n",
+        "#The current population of a town is 10000.The population of the town is increasing at the rate of 10% per year.You have to wirte a program to find out the population at the end of each of each of the last 10 years.\n",
+        "\n",
+        "population=10000\n",
+        "#population=x\n",
+        "#x+x*0.1=10000\n",
+        "#1.1x=10000\n",
+        "#x=10000/1.1\n",
+        "\n",
+        "for i in range(10,0,-1):\n",
+        "  print(f\"At year {i} population is {population:.2f}\")\n",
+        "  population=population/1.1"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "1yu8KBRLqNn8",
+        "outputId": "d3d99f49-2069-4169-ecb2-ba149a0743cc"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "At year 10 population is 10000.00\n",
+            "At year 9 population is 9090.91\n",
+            "At year 8 population is 8264.46\n",
+            "At year 7 population is 7513.15\n",
+            "At year 6 population is 6830.13\n",
+            "At year 5 population is 6209.21\n",
+            "At year 4 population is 5644.74\n",
+            "At year 3 population is 5131.58\n",
+            "At year 2 population is 4665.07\n",
+            "At year 1 population is 4240.98\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Sequence term 1/1!+2/2!+3/3!+------\n",
+        "import math as m\n",
+        "\n",
+        "n=int(input(\"Enter a number till you found sum:\"))\n",
+        "sum=0\n",
+        "for i in range(1,n+1):\n",
+        "  print(f\"{i}/{i}!\",end=\"+\")\n",
+        "  sum+=i/m.factorial(i)\n",
+        "\n",
+        "else:\n",
+        "  print(\"\\n\")\n",
+        "  print(f\"Sum is:{sum:.2f}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "vHzuBYnJyZZc",
+        "outputId": "223438d4-a8a7-4b99-eedd-428d2256bfa3"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter a number till you found sum:5\n",
+            "1/1!+2/2!+3/3!+4/4!+5/5!+\n",
+            "\n",
+            "Sum is:2.71\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "S1hrvCjF0eY7"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
