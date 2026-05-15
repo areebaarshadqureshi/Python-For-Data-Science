@@ -1,0 +1,1031 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPisSqOWQGws4V1l969PRPd",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/areebaarshadqureshi/Data-Analysis-Journey-CampusX/blob/main/06-EDA-and-Data-Preprocessing%20/04-Feature_Engineering/01-Feature_Transformation/Distirbution/Column_Transformer\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Why Do We Need ColumnTransformer?\n",
+        "\n",
+        "In real-world datasets, different columns require different preprocessing steps.\n",
+        "\n",
+        "For example:\n",
+        "\n",
+        "<ul>\n",
+        "<li><b>Numerical columns</b> → Scaling</li>\n",
+        "<li><b>Categorical columns</b> → Encoding</li>\n",
+        "<li><b>Some columns</b> → Imputation</li>\n",
+        "<li><b>Some columns</b> → Dropping</li>\n",
+        "</ul>\n",
+        "\n",
+        "Applying one preprocessing technique to the entire dataset is incorrect because each feature type requires different treatment.\n",
+        "\n",
+        "That is why we use <b>ColumnTransformer</b> in Scikit-learn.\n",
+        "\n",
+        "It allows us to:\n",
+        "\n",
+        "<ul>\n",
+        "<li>Apply different transformations to different columns</li>\n",
+        "<li>Combine them into a single preprocessing object</li>\n",
+        "<li>Ensure consistent transformation during training and testing</li>\n",
+        "</ul>\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### The Core Problem It Solves\n",
+        "\n",
+        "### ❌ Without ColumnTransformer:\n",
+        "\n",
+        "<ul>\n",
+        "<li>Manual preprocessing of columns separately</li>\n",
+        "<li>Risk of column misalignment</li>\n",
+        "<li>Difficult pipeline integration</li>\n",
+        "<li>Error-prone during deployment</li>\n",
+        "</ul>\n",
+        "\n",
+        "### ✅ With ColumnTransformer:\n",
+        "\n",
+        "<ul>\n",
+        "<li>Structured preprocessing</li>\n",
+        "<li>Fully pipeline-compatible</li>\n",
+        "<li>Prevents data leakage</li>\n",
+        "<li>Ensures reproducibility</li>\n",
+        "</ul>\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### Example Scenario\n",
+        "\n",
+        "Suppose we have:\n",
+        "\n",
+        "<ul>\n",
+        "<li><b>Age</b> → Numerical → StandardScaler</li>\n",
+        "<li><b>Salary</b> → Numerical → StandardScaler</li>\n",
+        "<li><b>Gender</b> → Categorical → OneHotEncoder</li>\n",
+        "<li><b>City</b> → Categorical → OneHotEncoder</li>\n",
+        "</ul>\n",
+        "\n",
+        "Mathematically, we are applying different transformation functions:\n",
+        "\n",
+        "$$\n",
+        "X_{numeric} \\rightarrow StandardScaler(X_{numeric})\n",
+        "$$\n",
+        "\n",
+        "$$\n",
+        "X_{categorical} \\rightarrow OneHotEncoder(X_{categorical})\n",
+        "$$\n",
+        "\n",
+        "ColumnTransformer combines these into a single unified transformation:\n",
+        "\n",
+        "$$\n",
+        "X \\rightarrow [T_{num}(X_{num}),\\; T_{cat}(X_{cat})]\n",
+        "$$\n",
+        "\n",
+        "---\n",
+        "\n",
+        "### Basic Syntax\n",
+        "\n",
+        "```python\n",
+        "from sklearn.compose import ColumnTransformer\n",
+        "from sklearn.preprocessing import StandardScaler, OneHotEncoder\n",
+        "\n",
+        "preprocessor = ColumnTransformer(\n",
+        "    transformers=[\n",
+        "        ('num', StandardScaler(), ['Age', 'Salary']),\n",
+        "        ('cat', OneHotEncoder(drop='first'), ['Gender', 'City'])\n",
+        "    ]\n",
+        ")\n",
+        "````\n",
+        "\n",
+        "This `preprocessor` can now be added inside a Pipeline.\n",
+        "\n",
+        "### When Is It Mandatory?\n",
+        "\n",
+        "<ul>\n",
+        "<li>When dataset has mixed data types</li>\n",
+        "<li>When building ML pipelines</li>\n",
+        "<li>When preparing models for production</li>\n",
+        "</ul>\n"
+      ],
+      "metadata": {
+        "id": "dd1piS6OIZVh"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "A1YrsjkTHuD1"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.impute import SimpleImputer\n",
+        "from sklearn.preprocessing import OneHotEncoder\n",
+        "from sklearn.preprocessing import OrdinalEncoder"
+      ],
+      "metadata": {
+        "id": "Yw8SCDpbI8w4"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df = pd.read_csv('/content/covid_toy.csv')"
+      ],
+      "metadata": {
+        "id": "_d1VcEWLI_gx"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 206
+        },
+        "id": "ZFuEAkNSJB3I",
+        "outputId": "0efccc1d-3503-4f5a-ab06-6864a1ca5ad4"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "   age  gender  fever cough     city has_covid\n",
+              "0   60    Male  103.0  Mild  Kolkata        No\n",
+              "1   27    Male  100.0  Mild    Delhi       Yes\n",
+              "2   42    Male  101.0  Mild    Delhi        No\n",
+              "3   31  Female   98.0  Mild  Kolkata        No\n",
+              "4   65  Female  101.0  Mild   Mumbai        No"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-bc403c99-9dea-448b-b4eb-3f0561ec8906\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>age</th>\n",
+              "      <th>gender</th>\n",
+              "      <th>fever</th>\n",
+              "      <th>cough</th>\n",
+              "      <th>city</th>\n",
+              "      <th>has_covid</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>60</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>103.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Kolkata</td>\n",
+              "      <td>No</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>27</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>100.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Delhi</td>\n",
+              "      <td>Yes</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>42</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>101.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Delhi</td>\n",
+              "      <td>No</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>31</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>98.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Kolkata</td>\n",
+              "      <td>No</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>65</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>101.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Mumbai</td>\n",
+              "      <td>No</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-bc403c99-9dea-448b-b4eb-3f0561ec8906')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-bc403c99-9dea-448b-b4eb-3f0561ec8906 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-bc403c99-9dea-448b-b4eb-3f0561ec8906');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 100,\n  \"fields\": [\n    {\n      \"column\": \"age\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 24,\n        \"min\": 5,\n        \"max\": 84,\n        \"num_unique_values\": 55,\n        \"samples\": [\n          55,\n          84,\n          49\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"gender\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"Female\",\n          \"Male\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"fever\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 2.0549261782367014,\n        \"min\": 98.0,\n        \"max\": 104.0,\n        \"num_unique_values\": 7,\n        \"samples\": [\n          103.0,\n          100.0\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"cough\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"Strong\",\n          \"Mild\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"city\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 4,\n        \"samples\": [\n          \"Delhi\",\n          \"Bangalore\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"has_covid\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"Yes\",\n          \"No\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.isnull().sum()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 272
+        },
+        "id": "w5S8a-2uJFnQ",
+        "outputId": "8d6e22a5-d072-4450-f660-9c81ac3e0401"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "age           0\n",
+              "gender        0\n",
+              "fever        10\n",
+              "cough         0\n",
+              "city          0\n",
+              "has_covid     0\n",
+              "dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>0</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>age</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>gender</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>fever</th>\n",
+              "      <td>10</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>cough</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>city</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>has_covid</th>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.model_selection import train_test_split\n",
+        "X_train,X_test,y_train,y_test = train_test_split(df.drop(columns=['has_covid']),df['has_covid'],\n",
+        "                                                test_size=0.2)"
+      ],
+      "metadata": {
+        "id": "zuIUQ0d6JMMB"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "X_train"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 424
+        },
+        "id": "gHq95UJKJMDd",
+        "outputId": "f72ae6fd-94e1-41d8-9990-eb3028faf661"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "    age  gender  fever   cough       city\n",
+              "35   82  Female  102.0  Strong  Bangalore\n",
+              "89   46    Male  103.0  Strong  Bangalore\n",
+              "85   16  Female  103.0    Mild  Bangalore\n",
+              "31   83    Male  103.0    Mild    Kolkata\n",
+              "60   24  Female  102.0  Strong  Bangalore\n",
+              "..  ...     ...    ...     ...        ...\n",
+              "43   22  Female   99.0    Mild  Bangalore\n",
+              "41   82    Male    NaN    Mild    Kolkata\n",
+              "84   69  Female   98.0  Strong     Mumbai\n",
+              "87   47    Male  101.0  Strong  Bangalore\n",
+              "97   20  Female  101.0    Mild  Bangalore\n",
+              "\n",
+              "[80 rows x 5 columns]"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-4b97078b-98b3-4e9f-9d52-502eabc75f42\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>age</th>\n",
+              "      <th>gender</th>\n",
+              "      <th>fever</th>\n",
+              "      <th>cough</th>\n",
+              "      <th>city</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>35</th>\n",
+              "      <td>82</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>102.0</td>\n",
+              "      <td>Strong</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>89</th>\n",
+              "      <td>46</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>103.0</td>\n",
+              "      <td>Strong</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>85</th>\n",
+              "      <td>16</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>103.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>31</th>\n",
+              "      <td>83</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>103.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Kolkata</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>60</th>\n",
+              "      <td>24</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>102.0</td>\n",
+              "      <td>Strong</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>...</th>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "      <td>...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>43</th>\n",
+              "      <td>22</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>99.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>41</th>\n",
+              "      <td>82</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>NaN</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Kolkata</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>84</th>\n",
+              "      <td>69</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>98.0</td>\n",
+              "      <td>Strong</td>\n",
+              "      <td>Mumbai</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>87</th>\n",
+              "      <td>47</td>\n",
+              "      <td>Male</td>\n",
+              "      <td>101.0</td>\n",
+              "      <td>Strong</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>97</th>\n",
+              "      <td>20</td>\n",
+              "      <td>Female</td>\n",
+              "      <td>101.0</td>\n",
+              "      <td>Mild</td>\n",
+              "      <td>Bangalore</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "<p>80 rows × 5 columns</p>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-4b97078b-98b3-4e9f-9d52-502eabc75f42')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-4b97078b-98b3-4e9f-9d52-502eabc75f42 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-4b97078b-98b3-4e9f-9d52-502eabc75f42');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "  <div id=\"id_0ec65670-d781-4547-bd80-d9a589c12878\">\n",
+              "    <style>\n",
+              "      .colab-df-generate {\n",
+              "        background-color: #E8F0FE;\n",
+              "        border: none;\n",
+              "        border-radius: 50%;\n",
+              "        cursor: pointer;\n",
+              "        display: none;\n",
+              "        fill: #1967D2;\n",
+              "        height: 32px;\n",
+              "        padding: 0 0 0 0;\n",
+              "        width: 32px;\n",
+              "      }\n",
+              "\n",
+              "      .colab-df-generate:hover {\n",
+              "        background-color: #E2EBFA;\n",
+              "        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "        fill: #174EA6;\n",
+              "      }\n",
+              "\n",
+              "      [theme=dark] .colab-df-generate {\n",
+              "        background-color: #3B4455;\n",
+              "        fill: #D2E3FC;\n",
+              "      }\n",
+              "\n",
+              "      [theme=dark] .colab-df-generate:hover {\n",
+              "        background-color: #434B5C;\n",
+              "        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "        fill: #FFFFFF;\n",
+              "      }\n",
+              "    </style>\n",
+              "    <button class=\"colab-df-generate\" onclick=\"generateWithVariable('X_train')\"\n",
+              "            title=\"Generate code using this dataframe.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\"viewBox=\"0 0 24 24\"\n",
+              "       width=\"24px\">\n",
+              "    <path d=\"M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "    <script>\n",
+              "      (() => {\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#id_0ec65670-d781-4547-bd80-d9a589c12878 button.colab-df-generate');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      buttonEl.onclick = () => {\n",
+              "        google.colab.notebook.generateWithVariable('X_train');\n",
+              "      }\n",
+              "      })();\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "X_train",
+              "summary": "{\n  \"name\": \"X_train\",\n  \"rows\": 80,\n  \"fields\": [\n    {\n      \"column\": \"age\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 25,\n        \"min\": 5,\n        \"max\": 83,\n        \"num_unique_values\": 51,\n        \"samples\": [\n          10,\n          8,\n          12\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"gender\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"Male\",\n          \"Female\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"fever\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 2.0091116644839078,\n        \"min\": 98.0,\n        \"max\": 104.0,\n        \"num_unique_values\": 7,\n        \"samples\": [\n          102.0,\n          103.0\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"cough\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"Mild\",\n          \"Strong\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"city\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 4,\n        \"samples\": [\n          \"Kolkata\",\n          \"Mumbai\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "1. without column transformer"
+      ],
+      "metadata": {
+        "id": "cRbIxaFmJZnv"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# adding simple imputer to fever col\n",
+        "si = SimpleImputer() ##all missing values replace by column mean\n",
+        "X_train_fever = si.fit_transform(X_train[['fever']])\n",
+        "\n",
+        "# also the test data\n",
+        "X_test_fever = si.fit_transform(X_test[['fever']])\n",
+        "\n",
+        "X_train_fever.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "KMohU3bGJL5J",
+        "outputId": "8051ed71-b752-47ab-fc1b-d98210cd7508"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(80, 1)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 10
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        " #Ordinalencoding -> cough\n",
+        "oe = OrdinalEncoder(categories=[['Mild','Strong']])\n",
+        "X_train_cough = oe.fit_transform(X_train[['cough']])\n",
+        "\n",
+        "# also the test data\n",
+        "X_test_cough = oe.fit_transform(X_test[['cough']])\n",
+        "\n",
+        "X_train_cough.shape\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "FtLQUBjzJLhD",
+        "outputId": "4215841c-0b79-4a93-c7fe-907346677b54"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(80, 1)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# OneHotEncoding -> gender,city\n",
+        "ohe = OneHotEncoder(drop='first',sparse_output=False)\n",
+        "X_train_gender_city = ohe.fit_transform(X_train[['gender','city']])\n",
+        "\n",
+        "# also the test data\n",
+        "X_test_gender_city = ohe.fit_transform(X_test[['gender','city']])\n",
+        "\n",
+        "X_train_gender_city.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "CgYctZx1JhPF",
+        "outputId": "92bf6bae-f8f0-4b02-d9ae-250c786b8cbc"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(80, 4)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 21
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Extracting Age\n",
+        "X_train_age = X_train.drop(columns=['gender','fever','cough','city']).values\n",
+        "\n",
+        "# also the test data\n",
+        "X_test_age = X_test.drop(columns=['gender','fever','cough','city']).values\n",
+        "\n",
+        "X_train_age.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "YkvgbMF5Jhqr",
+        "outputId": "7dab5f49-d71f-42d4-f819-01919e5511db"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(80, 1)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 22
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "X_train_transformed = np.concatenate((X_train_age,X_train_fever,X_train_gender_city,X_train_cough),axis=1)\n",
+        "# also the test data\n",
+        "X_test_transformed = np.concatenate((X_test_age,X_test_fever,X_test_gender_city,X_test_cough),axis=1)\n",
+        "\n",
+        "X_train_transformed.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "TcNRSTfQJh4e",
+        "outputId": "2616da26-e22c-4240-8d93-db6ed135120a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(80, 7)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 23
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2. With column transformer"
+      ],
+      "metadata": {
+        "id": "P97IRmG-JvuE"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.compose import ColumnTransformer\n",
+        "\n",
+        "transformer = ColumnTransformer(transformers=[\n",
+        "    ('tnf1',SimpleImputer(),['fever']),\n",
+        "    ('tnf2',OrdinalEncoder(categories=[['Mild','Strong']]),['cough']),\n",
+        "    ('tnf3',OneHotEncoder(sparse_output=False,drop='first'),['gender','city'])\n",
+        "],remainder='passthrough')"
+      ],
+      "metadata": {
+        "id": "FIHhNpBIJtay"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "transformer.fit_transform(X_train).shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MrPQYcNIJtPi",
+        "outputId": "a58e6caa-f5a5-4359-9200-274688848436"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(80, 7)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 19
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "transformer.transform(X_test).shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3phcIJ9VJtG9",
+        "outputId": "46c33c37-bcfd-4c3c-b9b7-8a562ea54122"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(20, 7)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 20
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "IbzMmkgxKHMl"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
